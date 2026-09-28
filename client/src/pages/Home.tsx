@@ -85,6 +85,11 @@ function createWorld(scene: THREE.Scene) {
   addReferenceModel("/reference-assets/trees/birchTrees.glb", [-16, 0, 12], 4.4, 0.5);
   addReferenceModel("/reference-assets/trees/oakTrees.glb", [16, 0, 13], 4.8, -0.4);
   addReferenceModel("/reference-assets/trees/cherryTrees.glb", [-13, 0, -14], 4.6, 0.2);
+  assetLoader.load("/reference-assets/terrain/terrain.glb", (gltf) => {
+    const model = gltf.scene; model.traverse((child) => { if (child instanceof THREE.Mesh) { child.castShadow = true; child.receiveShadow = true; } });
+    const bounds = new THREE.Box3().setFromObject(model); const size = bounds.getSize(new THREE.Vector3()); const center = bounds.getCenter(new THREE.Vector3()); const factor = 42 / Math.max(size.x, size.z, 0.001);
+    model.scale.setScalar(factor); model.position.set(-center.x * factor, -0.55 - center.y * factor, -center.z * factor); island.visible = false; group.add(model);
+  });
 
   for (let i = 0; i < 14; i++) {
     const x = (i % 2 ? 1 : -1) * (6 + (i * 3) % 12); const z = -20 + (i * 7) % 39;
@@ -129,11 +134,13 @@ export default function Home() {
     const car = new THREE.Group(); const body = new THREE.Mesh(new THREE.BoxGeometry(1.4, .42, 2.35), new THREE.MeshStandardMaterial({ color: 0xd7ff57, roughness: .45, metalness: .15 })); body.position.y = .65; body.castShadow = true; car.add(body);
     const cabin = new THREE.Mesh(new THREE.BoxGeometry(.9, .38, 1.0), new THREE.MeshStandardMaterial({ color: 0x172027, roughness: .2, metalness: .35 })); cabin.position.set(0, 1.02, -.1); car.add(cabin);
     const wheelMat = new THREE.MeshStandardMaterial({ color: 0x080a0d, roughness: .8 }); [-.72,.72].forEach(x => [-.72,.72].forEach(z => { const w = new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,.16,16), wheelMat); w.rotation.z = Math.PI/2; w.position.set(x,.43,z); car.add(w); }));
+    const tireMat = new THREE.MeshStandardMaterial({ color: 0x090b0d, roughness: .86, metalness: .05 }); const hubMat = new THREE.MeshStandardMaterial({ color: 0xff806b, roughness: .42, metalness: .25 });
+    [-.9,.9].forEach(x => [-.72,.72].forEach(z => { const tire = new THREE.Mesh(new THREE.TorusGeometry(.31,.12,10,18), tireMat); tire.rotation.y = Math.PI / 2; tire.position.set(x,.42,z); car.add(tire); const hub = new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,.13,12), hubMat); hub.rotation.z = Math.PI / 2; hub.position.set(x,.42,z); car.add(hub); }));
     const head = new THREE.PointLight(0xd7ff57, 2.8, 7); head.position.set(0,.75,1.25); car.add(head); car.position.set(0,0,7); scene.add(car);
     new GLTFLoader().load("/reference-assets/vehicle/default.glb", (gltf) => {
       const model = gltf.scene; model.traverse((child) => { if (child instanceof THREE.Mesh) { child.castShadow = true; child.receiveShadow = true; } });
       const bounds = new THREE.Box3().setFromObject(model); const size = bounds.getSize(new THREE.Vector3()); const center = bounds.getCenter(new THREE.Vector3()); const factor = 2.8 / Math.max(size.x, size.y, size.z, 0.001);
-      model.scale.setScalar(factor); model.position.set(-center.x * factor, 0.18 - center.y * factor, -center.z * factor); model.rotation.y = Math.PI;
+      model.scale.setScalar(factor); model.position.set(-center.x * factor, 0.18 - center.y * factor, -center.z * factor); model.rotation.y = 0;
       body.visible = false; cabin.visible = false; car.add(model);
     });
     const starsGeo = new THREE.BufferGeometry(); const starPositions = new Float32Array(240 * 3); for(let i=0;i<240;i++){ starPositions[i*3]=(Math.random()-.5)*75; starPositions[i*3+1]=8+Math.random()*25; starPositions[i*3+2]=(Math.random()-.5)*75; } starsGeo.setAttribute("position", new THREE.BufferAttribute(starPositions,3)); scene.add(new THREE.Points(starsGeo, new THREE.PointsMaterial({ color: 0xffd4ac, size: .05, transparent: true, opacity: .75 })));
