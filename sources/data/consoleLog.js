@@ -16,20 +16,20 @@ const text = `
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝      ╚═════╝ ╚══════╝╚═╝ ╚═════╝ 
 
 ╔═ Intro ═══════════════╗
-║ Thank you for visiting my portfolio, you sneaky developer!
-║ If you are curious about the stack and how I built this project, here’s everything you need to know.
+║ ¡Gracias por visitar mi portafolio, desarrollador curioso!
+║ Si te interesa la tecnología y cómo construí este proyecto, acá tenés todo lo que necesitás saber.
 ╚═══════════════════════╝
 
 ╔═ Socials ═══════════════╗
-║ Mail           ⇒ simon.bruno.77@gmail.com
-║ X              ⇒ https://x.com/bruno_simon
-║ BlueSKy        ⇒ https://bsky.app/profile/bruno-simon.bsky.social
+║ Mail           ⇒ Alejandro Báez / Otro Mundo
+║ X              ⇒ https://github.com/aleotromundo/SitioPanacea-3D
+║ BlueSKy        ⇒ https://github.com/aleotromundo/SitioPanacea-3D
 ║ Discord public ⇒ https://discord.com/channels/769928116701233152/1445064878384480288
 ║ Discord PM     ⇒ https://discord.com/users/202907325722263553
-║ Youtube        ⇒ https://www.youtube.com/@BrunoSimon
-║ Twitch         ⇒ https://www.twitch.tv/bruno_simon_dev
-║ GitHub         ⇒ https://github.com/brunosimon
-║ LinkedIn       ⇒ https://www.linkedin.com/in/simonbruno77/
+║ Youtube        ⇒ https://github.com/aleotromundo/SitioPanacea-3D
+║ Twitch         ⇒ https://github.com/aleotromundo/SitioPanacea-3D
+║ GitHub         ⇒ https://github.com/aleotromundo/SitioPanacea-3D
+║ LinkedIn       ⇒ https://github.com/aleotromundo/SitioPanacea-3D
 ╚═══════════════════════╝
 
 ╔═ Debug ═══════════════╗
@@ -55,13 +55,13 @@ const text = `
 ╔═ Devlogs ═════════════╗
 ║ I’ve been making devlogs since the very start of this portfolio
 ║ and you can find them all on my Youtube channel.
-║ https://www.youtube.com/@BrunoSimon
+║ https://github.com/aleotromundo/SitioPanacea-3D
 ╚═══════════════════════╝
 
 ╔═ Source code ═════════╗
-║ The code is available on GitHub under MIT license. Even the Blender files are there, so have fun!
-║ https://github.com/brunosimon/folio-2025
-║ For security reasons, I’m not sharing the server code, but the portfolio works without it.
+║ El código de Otro Mundo está disponible en GitHub bajo licencia MIT. Even the Blender files are there, so have fun!
+║ https://github.com/aleotromundo/SitioPanacea-3D/folio-2025
+║ La experiencia funciona completamente sin un servidor propio.
 ╚═══════════════════════╝
 
 ╔═ Musics ══════════════╗
@@ -69,7 +69,7 @@ const text = `
 ║ https://linktr.ee/Kounine
 ║ They are now under CC0 license, meaning you can do whatever you want with them!
 ║ Download them here.
-║ https://github.com/brunosimon/folio-2025/tree/main/static/sounds/musics
+║ https://github.com/aleotromundo/SitioPanacea-3D/folio-2025/tree/main/static/sounds/musics
 ╚═══════════════════════╝
 
 ╔═ Some more links ═════╗

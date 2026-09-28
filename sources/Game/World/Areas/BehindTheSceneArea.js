@@ -15,7 +15,7 @@ export class BehindTheSceneArea extends Area
         if(this.game.debug.active)
         {
             this.debugPanel = this.game.debug.panel.addFolder({
-                title: '🔳 Behind the scene',
+                title: '🔳 Detrás de escena',
                 expanded: false,
             })
         }
@@ -118,7 +118,7 @@ export class BehindTheSceneArea extends Area
     {
         this.interactivePoint = this.game.interactivePoints.create(
             this.references.items.get('interactivePoint')[0].position,
-            'Behind the scene',
+            'Detrás de escena',
             InteractivePoints.ALIGN_RIGHT,
             InteractivePoints.STATE_CONCEALED,
             () =>
