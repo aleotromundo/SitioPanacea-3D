@@ -167,7 +167,11 @@ export class Objects
                 if(_child.name.match(/^trimesh/i))
                 {
                     collider.shape = 'trimesh'
-                    collider.parameters = [ _child.geometry.attributes.position.array, _child.geometry.index.array ]
+                    const position = _child.geometry.attributes.position
+                    const index = _child.geometry.index
+                    if(!position || !index)
+                        continue
+                    collider.parameters = [ position.array, new Uint32Array(index.array) ]
                 }
                 else if(_child.name.match(/^hull/i))
                 {
