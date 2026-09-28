@@ -38,9 +38,10 @@ function createWorld(scene: THREE.Scene) {
 
   const waterMesh = new THREE.Mesh(new THREE.CircleGeometry(38, 64), water);
   waterMesh.rotation.x = -Math.PI / 2; waterMesh.position.y = -1.3; group.add(waterMesh);
-  const terrainTexture = new THREE.TextureLoader().load("/reference-assets/terrain/terrain.png");
-  terrainTexture.wrapS = THREE.RepeatWrapping; terrainTexture.wrapT = THREE.RepeatWrapping; terrainTexture.repeat.set(7, 7); terrainTexture.colorSpace = THREE.SRGBColorSpace;
-  const island = new THREE.Mesh(new THREE.CylinderGeometry(25, 28, 1.5, 12), new THREE.MeshStandardMaterial({ map: terrainTexture, color: 0xa39b87, roughness: 1 }));
+  const terrainCanvas = document.createElement("canvas"); terrainCanvas.width = terrainCanvas.height = 128; const terrainContext = terrainCanvas.getContext("2d")!; terrainContext.fillStyle = "#263331"; terrainContext.fillRect(0, 0, 128, 128);
+  for (let i = 0; i < 300; i++) { const value = 36 + Math.floor(Math.random() * 22); terrainContext.fillStyle = `rgb(${value - 7}, ${value}, ${value - 2})`; terrainContext.fillRect(Math.random() * 128, Math.random() * 128, 1 + Math.random() * 5, 1 + Math.random() * 5); }
+  const terrainTexture = new THREE.CanvasTexture(terrainCanvas); terrainTexture.wrapS = THREE.RepeatWrapping; terrainTexture.wrapT = THREE.RepeatWrapping; terrainTexture.repeat.set(7, 7);
+  const island = new THREE.Mesh(new THREE.CylinderGeometry(25, 28, 1.5, 12), new THREE.MeshStandardMaterial({ map: terrainTexture, roughness: 1 }));
   island.position.y = -0.6; group.add(island);
 
   const roadMat = new THREE.MeshStandardMaterial({ color: 0x0d1115, roughness: 0.92 });
