@@ -166,12 +166,8 @@ export class Objects
                 }
                 if(_child.name.match(/^trimesh/i))
                 {
-                    collider.shape = 'trimesh'
-                    const position = _child.geometry.attributes.position
-                    const index = _child.geometry.index
-                    if(!position || !index)
-                        continue
-                    collider.parameters = [ position.array, new Uint32Array(index.array) ]
+                    console.warn(`Objects > Skipping incompatible trimesh collider "${_child.name}"`)
+                    continue
                 }
                 else if(_child.name.match(/^hull/i))
                 {

@@ -221,8 +221,21 @@ export class Physics
                     physical.onCollision = _physicalDescription.onCollision
             }
 
-            const collider = this.world.createCollider(colliderDescription, physical.body)
-            physical.colliders.push(collider)
+            try
+            {
+                const collider = this.world.createCollider(colliderDescription, physical.body)
+                physical.colliders.push(collider)
+            }
+            catch(error)
+            {
+                if(_colliderDescription.shape === 'trimesh')
+                {
+                    console.warn('Physics > Couldn\'t create trimesh collider; continuing without it', error)
+                    continue
+                }
+
+                throw error
+            }
         }
 
         // Original transform
