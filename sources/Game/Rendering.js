@@ -37,14 +37,19 @@ export class Rendering
 
     async setRenderer()
     {
+        // Some mobile browsers expose partial WebGPU support: the loading/intro
+        // can render, but the first full scene pass becomes black after a touch.
+        // Use Three's WebGL backend on touch devices for a reliable fallback.
+        this.isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+            || (navigator.maxTouchPoints > 1 && Math.min(innerWidth, innerHeight) < 1024)
         this.renderer = new THREE.WebGPURenderer({
             canvas: this.game.canvasElement,
             powerPreference: 'high-performance',
-            forceWebGL: false,
+            forceWebGL: this.isMobile,
             antialias: this.game.viewport.pixelRatio < 2
         })
         this.renderer.setSize(this.game.viewport.width, this.game.viewport.height)
-        this.renderer.setPixelRatio(this.game.viewport.pixelRatio)
+        this.renderer.setPixelRatio(Math.min(this.game.viewport.pixelRatio, this.isMobile ? 1.5 : 2))
         this.renderer.sortObjects = false
 
         this.renderer.domElement.classList.add('experience')
@@ -95,7 +100,9 @@ export class Rendering
             }
             else if(level === 1)
             {
-                this.postProcessing.outputNode = scenePassColor.add(this.bloomPass)
+                // Bloom is optional on mobile and can exceed the limits of some
+                // WebGL implementations when the full world is revealed.
+                this.postProcessing.outputNode = this.isMobile ? scenePassColor : scenePassColor.add(this.bloomPass)
             }
 
             this.postProcessing.needsUpdate = true
@@ -165,7 +172,7 @@ export class Rendering
     resize()
     {
         this.renderer.setSize(this.game.viewport.width, this.game.viewport.height)
-        this.renderer.setPixelRatio(this.game.viewport.pixelRatio)
+        this.renderer.setPixelRatio(Math.min(this.game.viewport.pixelRatio, this.isMobile ? 1.5 : 2))
     }
 
     async render()
