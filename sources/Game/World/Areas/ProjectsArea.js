@@ -487,11 +487,12 @@ export class ProjectsArea extends Area
                     (loadedTexture) =>
                     {
                         resource.texture = loadedTexture
-                        resource.colorSpace = THREE.SRGBColorSpace
-                        resource.flipY = false
-                        resource.magFilter = THREE.LinearFilter
-                        resource.minFilter = THREE.LinearFilter
-                        resource.generateMipmaps = false
+                        loadedTexture.colorSpace = THREE.SRGBColorSpace
+                        loadedTexture.flipY = key.endsWith('.png')
+                        loadedTexture.magFilter = THREE.LinearFilter
+                        loadedTexture.minFilter = THREE.LinearFilter
+                        loadedTexture.generateMipmaps = false
+                        loadedTexture.needsUpdate = true
 
                         resource.loaded = true
                         
@@ -593,6 +594,7 @@ export class ProjectsArea extends Area
         }
 
         this.projectObjects.push(succulent, computer, digital)
+        this.projectObjectIntersects = []
         for(const object of this.projectObjects)
         {
             object.position.copy(this.images.mesh.position)
@@ -603,6 +605,25 @@ export class ProjectsArea extends Area
             object.scale.setScalar(0.85)
             object.visible = false
             anchor.add(object)
+        }
+
+        for(const [index, object] of this.projectObjects.entries())
+        {
+            const intersect = this.game.rayCursor.addIntersect({
+                active: false,
+                shape: object.children[0],
+                onEnter: () => gsap.to(object.scale, { x: 0.98, y: 0.98, z: 0.98, duration: 0.2, overwrite: true }),
+                onLeave: () => gsap.to(object.scale, { x: 0.85, y: 0.85, z: 0.85, duration: 0.2, overwrite: true }),
+                onClick: () =>
+                {
+                    this.changeProject(index, ProjectsArea.DIRECTION_NEXT)
+                    this.open()
+                    gsap.timeline()
+                        .to(object.rotation, { y: object.rotation.y + Math.PI * 2, duration: 0.8, ease: 'back.out(1.4)' })
+                        .to(object.scale, { x: 1.05, y: 1.05, z: 1.05, duration: 0.15, yoyo: true, repeat: 1 }, '<')
+                }
+            })
+            this.projectObjectIntersects.push(intersect)
         }
     }
 
@@ -1548,7 +1569,10 @@ export class ProjectsArea extends Area
         this.navigation.next = projectsData[(this.navigation.index + 1) % projectsData.length]
 
         for(const [objectIndex, object] of this.projectObjects.entries())
+        {
             object.visible = objectIndex === this.navigation.index
+            this.projectObjectIntersects[objectIndex].active = object.visible
+        }
 
         // Update components
         this.attributes.update()
