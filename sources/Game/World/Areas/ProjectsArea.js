@@ -479,7 +479,7 @@ export class ProjectsArea extends Area
                 resource = {}
                 resource.loaded = false
 
-                const loader = this.game.resourcesLoader.getLoader('textureKtx')
+                const loader = this.game.resourcesLoader.getLoader(key.endsWith('.png') ? 'texture' : 'textureKtx')
 
                 loader.load(
                     path,

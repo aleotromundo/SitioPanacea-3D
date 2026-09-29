@@ -1,26 +1,26 @@
 export default [
     {
-        title: 'Otro Mundo',
-        titleSmall: [ 'Otro', 'Mundo' ],
+        title: 'OtroMundo Suculentas',
+        titleSmall: [ 'OtroMundo', 'Suculentas' ],
         url: 'https://github.com/aleotromundo/SitioPanacea-3D',
-        attributes: { role: [ 'desarrollo', 'dirección creativa' ], with: 'Alejandro Báez' },
-        distinctions: [ 'fwa' ],
-        images: [ 'threejs-journey-1.ktx', 'threejs-journey-2.ktx', 'threejs-journey-3.ktx' ]
+        attributes: { role: 'suculentas y productos botánicos', with: 'OtroMundo' },
+        distinctions: [],
+        images: [ 'otromundo-suculentas.png' ]
     },
     {
-        title: 'Panacea 3D',
-        titleSmall: [ 'Panacea', '3D' ],
+        title: 'ContraLaMaquina',
+        titleSmall: [ 'ContraLa', 'Maquina' ],
         url: 'https://github.com/aleotromundo/SitioPanacea-3D',
-        attributes: { role: 'desarrollo WebGL', with: 'Otro Mundo' },
-        distinctions: [ 'awwwards', 'fwa' ],
-        images: [ 'bonhomme-10-ans-1.ktx', 'bonhomme-10-ans-2.ktx', 'bonhomme-10-ans-3.ktx' ]
+        attributes: { role: 'reparación de computadoras', with: 'ContraLaMaquina' },
+        distinctions: [],
+        images: [ 'contralamaquina-reparacion.png' ]
     },
     {
-        title: 'Laboratorio',
-        titleSmall: [ 'Laboratorio' ],
+        title: 'Panacea3D',
+        titleSmall: [ 'Panacea3D' ],
         url: 'https://github.com/aleotromundo/SitioPanacea-3D',
-        attributes: { role: 'experimentos creativos', at: 'Otro Mundo' },
-        distinctions: [ 'fwa' ],
-        images: [ 'madbox-1.ktx', 'madbox-2.ktx', 'madbox-3.ktx' ]
+        attributes: { role: 'desarrollo de apps y sitios web', with: 'Panacea3D' },
+        distinctions: [],
+        images: [ 'panacea3d-desarrollo.png' ]
     }
 ]
