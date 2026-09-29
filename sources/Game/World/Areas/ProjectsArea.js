@@ -803,8 +803,11 @@ export class ProjectsArea extends Area
         this.attributes.items = {}
         this.attributes.status = 'hidden'
         this.attributes.originalY = this.attributes.group.position.y
-        // Bring the attributes column slightly closer to the scene/camera.
-        this.attributes.group.position.z += 0.5
+        // Acerca el poste de atributos a la cámara. Ajustá estos dos valores:
+        // z: más alto = más cerca de la cámara | x: más alto = más a la derecha
+        this.attributes.offset = { x: 0.6, z: 1.6 }
+        this.attributes.group.position.x += this.attributes.offset.x
+        this.attributes.group.position.z += this.attributes.offset.z
 
         for(const child of this.attributes.group.children)
         {
@@ -1176,6 +1179,26 @@ export class ProjectsArea extends Area
         this.distinctions.items.awwwards = this.distinctions.group.children.find(_child => _child.name.startsWith('awwwards'))
         this.distinctions.items.fwa = this.distinctions.group.children.find(_child => _child.name.startsWith('fwa'))
         this.distinctions.items.cssda = this.distinctions.group.children.find(_child => _child.name.startsWith('cssda'))
+
+        // El texto "DISTINCTIONS" viene horneado en la textura del GLB.
+        // Se reemplaza el plano de texto por uno dibujado con TextCanvas.
+        const distinctionsAnchor = this.images.mesh.parent || this.game.scene
+        const distinctionsLabelMesh = distinctionsAnchor.children.find(_child => _child.name.startsWith('refel'))
+        if(distinctionsLabelMesh)
+        {
+            this.distinctions.labelTextCanvas = new TextCanvas(
+                this.texts.fontFamily,
+                this.texts.fontWeight,
+                this.texts.fontSizeMultiplier * 0.23,
+                1.4,
+                0.45,
+                this.texts.density,
+                'center',
+                0.2
+            )
+            this.distinctions.labelTextCanvas.updateText('DISTINCIONES')
+            this.texts.createMaterialOnMesh(distinctionsLabelMesh, this.distinctions.labelTextCanvas.texture)
+        }
 
         this.distinctions.positions = [
             [
