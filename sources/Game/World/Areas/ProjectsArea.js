@@ -488,7 +488,9 @@ export class ProjectsArea extends Area
                     {
                         resource.texture = loadedTexture
                         loadedTexture.colorSpace = THREE.SRGBColorSpace
-                        loadedTexture.flipY = key.endsWith('.png')
+                        // TSL/WebGPU uses the same image-origin convention as the
+                        // rest of this world; do not apply TextureLoader's PNG flip.
+                        loadedTexture.flipY = false
                         loadedTexture.magFilter = THREE.LinearFilter
                         loadedTexture.minFilter = THREE.LinearFilter
                         loadedTexture.generateMipmaps = false
@@ -598,11 +600,13 @@ export class ProjectsArea extends Area
         for(const object of this.projectObjects)
         {
             object.position.copy(this.images.mesh.position)
-            object.position.x += 5.4
-            object.position.y += 0.15
-            object.position.z += 0.35
+            // Keep the decorative object in its own visual lane instead of placing
+            // it in front of the attributes board and project image.
+            object.position.x += 4.8
+            object.position.y += 0.1
+            object.position.z -= 0.9
             object.rotation.copy(this.images.mesh.rotation)
-            object.scale.setScalar(0.85)
+            object.scale.setScalar(0.58)
             object.visible = false
             anchor.add(object)
         }
