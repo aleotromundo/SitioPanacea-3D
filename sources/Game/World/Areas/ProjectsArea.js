@@ -42,6 +42,7 @@ export class ProjectsArea extends Area
         this.setHover()
         this.setNavigation()
         this.setImages()
+        this.setProjectObjects()
         this.setPagination()
         this.setAttributes()
         this.setAdjacents()
@@ -541,6 +542,67 @@ export class ProjectsArea extends Area
             // Animate right away
             gsap.fromTo(this.images.animationProgress, { value: 0 }, { value: 1, duration: 1, ease: 'power2.inOut', overwrite: true })
             this.images.animationDirection.value = direction === ProjectsArea.DIRECTION_NEXT ? 1 : -1
+        }
+    }
+
+    setProjectObjects()
+    {
+        this.projectObjects = []
+        const anchor = this.images.mesh.parent || this.game.scene
+        const makeMaterial = (hex) => new MeshDefaultMaterial({ colorNode: color(hex), hasWater: false })
+
+        const succulent = new THREE.Group()
+        succulent.add(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.32, 0.55, 12), makeMaterial('#d7a46d')))
+        for(let i = 0; i < 9; i++)
+        {
+            const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 6), makeMaterial(i % 2 ? '#72c989' : '#9fe08e'))
+            const angle = i / 9 * Math.PI * 2
+            leaf.position.set(Math.cos(angle) * 0.24, 0.35 + (i % 3) * 0.08, Math.sin(angle) * 0.24)
+            leaf.scale.set(0.7, 1.35, 0.45)
+            leaf.rotation.z = -Math.cos(angle) * 0.55
+            leaf.rotation.x = Math.sin(angle) * 0.55
+            succulent.add(leaf)
+        }
+
+        const computer = new THREE.Group()
+        const dark = makeMaterial('#202b45')
+        const monitor = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.72, 0.1), dark)
+        monitor.position.y = 0.35
+        computer.add(monitor)
+        const screen = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.5, 0.02), makeMaterial('#55c9ff'))
+        screen.position.set(0, 0.35, 0.07)
+        computer.add(screen)
+        const stand = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.32, 0.12), dark)
+        stand.position.y = -0.18
+        computer.add(stand)
+        const keyboard = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.08, 0.42), makeMaterial('#e08a4b'))
+        keyboard.position.set(0, -0.42, 0.12)
+        keyboard.rotation.x = -0.12
+        computer.add(keyboard)
+
+        const digital = new THREE.Group()
+        const portal = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.09, 10, 24), makeMaterial('#b76cff'))
+        portal.rotation.x = Math.PI * 0.5
+        digital.add(portal)
+        for(let i = 0; i < 3; i++)
+        {
+            const panel = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.28, 0.04), makeMaterial(i === 1 ? '#ff6ec7' : '#58d7ff'))
+            panel.position.set(-0.62 + i * 0.62, -0.55 + (i % 2) * 0.16, 0.05)
+            panel.rotation.z = (i - 1) * 0.12
+            digital.add(panel)
+        }
+
+        this.projectObjects.push(succulent, computer, digital)
+        for(const object of this.projectObjects)
+        {
+            object.position.copy(this.images.mesh.position)
+            object.position.x += 5.4
+            object.position.y += 0.15
+            object.position.z += 0.35
+            object.rotation.copy(this.images.mesh.rotation)
+            object.scale.setScalar(0.85)
+            object.visible = false
+            anchor.add(object)
         }
     }
 
@@ -1484,6 +1546,9 @@ export class ProjectsArea extends Area
         this.navigation.current = projectsData[this.navigation.index]
         this.navigation.previous = projectsData[(this.navigation.index - 1) < 0 ? projectsData.length - 1 : this.navigation.index - 1]
         this.navigation.next = projectsData[(this.navigation.index + 1) % projectsData.length]
+
+        for(const [objectIndex, object] of this.projectObjects.entries())
+            object.visible = objectIndex === this.navigation.index
 
         // Update components
         this.attributes.update()
