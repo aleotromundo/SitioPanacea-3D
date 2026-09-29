@@ -433,7 +433,7 @@ export class View
         // this.cinematic.targetHelper.userData.preventPreRender = true
         // this.game.scene.add(this.cinematic.targetHelper)
 
-        this.cinematic.start = (position, target) =>
+        this.cinematic.start = (position, target, nonIdealRatioOffset = this.cinematic.nonIdealRatioOffset) =>
         {
             this.cinematic.active = true
             this.cinematic.position = position.clone()
@@ -443,7 +443,7 @@ export class View
 
             if(this.ratioOverflow > 0)
             {
-                const delta = this.cinematic.position.clone().sub(this.cinematic.target).setLength(this.ratioOverflow * this.cinematic.nonIdealRatioOffset)
+                const delta = this.cinematic.position.clone().sub(this.cinematic.target).setLength(this.ratioOverflow * nonIdealRatioOffset)
                 this.cinematic.position.add(delta)
             }
 

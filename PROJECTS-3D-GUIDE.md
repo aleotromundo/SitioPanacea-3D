@@ -7,6 +7,7 @@ La escena de **Proyectos** se controla principalmente desde:
 - `sources/Game/World/Areas/ProjectsArea.js`: crea los objetos decorativos, busca los nodos del GLB, ubica imágenes/carteles y actualiza textos.
 - `sources/data/projects.js`: contiene los datos de cada proyecto, incluidos título, URL, imágenes y valores de `role`/`with`.
 - `sources/Game/TextCanvas.js`: dibuja textos en un canvas y los convierte en texturas para las superficies 3D.
+- `sources/Game/View.js`: controla cámaras, cámara cinematográfica y cámara libre.
 - `static/areas/areas.glb`: modelo 3D exportado desde Blender. Contiene las mesas, columnas, carteles, referencias y geometría del entorno.
 
 ## Cambiar la posición de un objeto creado por código
@@ -95,6 +96,28 @@ attributes: {
 }
 ```
 
+## Ajustar la cámara de entrada en Proyectos
+
+La animación de entrada se configura en `setCinematic()` dentro de `ProjectsArea.js`:
+
+```js
+this.cinematic.positionOffset = new THREE.Vector3(x, y, z)
+this.cinematic.targetOffset = new THREE.Vector3(x, y, z)
+```
+
+La posición define desde dónde llega la cámara y el objetivo define hacia dónde mira. En móvil se usan offsets más cercanos que en escritorio porque las pantallas verticales activan una corrección de encuadre diferente.
+
+Además, en móvil la corrección de proporción se reduce al iniciar la animación y, después de aproximadamente `1.6` segundos, se activa `View.MODE_FREE`. Eso permite mover la cámara con gestos táctiles mientras se está viendo Proyectos. En escritorio se conserva la cámara cinematográfica original.
+
+Los valores móviles se pueden ajustar aquí:
+
+```js
+new THREE.Vector3(3.2, 2.7, 3.5)       // posición móvil
+new THREE.Vector3(-2.5, 1.35, -3.8)    // objetivo móvil
+```
+
+Para acercar todavía más la cámara, normalmente hay que reducir la magnitud de los valores de posición, especialmente `x`, `y` y `z`. Para cambiar el punto que mira, modificar el segundo vector. Conviene variar un solo número por vez y probar en un teléfono real.
+
 ## Cambiar la posición de un objeto que ya está dentro del GLB
 
 Si querés mover una mesa, columna u objeto que no fue creado por código:
@@ -128,6 +151,7 @@ Para validar antes de subir cambios:
 
 ```bash
 node --check sources/Game/World/Areas/ProjectsArea.js
+node --check sources/Game/View.js
 pnpm run build
 ```
 

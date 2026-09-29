@@ -6,6 +6,7 @@ import projectsData from '../../../data/projects.js'
 import { TextCanvas } from '../../TextCanvas.js'
 import { add, color, float, Fn, If, luminance, mix, mul, normalWorld, positionGeometry, sin, step, texture, uniform, uv, vec3, vec4 } from 'three/tsl'
 import { Inputs } from '../../Inputs/Inputs.js'
+import { View } from '../../View.js'
 import { MeshDefaultMaterial } from '../../Materials/MeshDefaultMaterial.js'
 import { Area } from './Area.js'
 
@@ -177,12 +178,16 @@ export class ProjectsArea extends Area
     setCinematic()
     {
         this.cinematic = {}
-        
+        this.cinematic.isTouchDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || navigator.maxTouchPoints > 0
         this.cinematic.position = new THREE.Vector3()
-        this.cinematic.positionOffset = new THREE.Vector3(4.65, 4, 4.85)
+        this.cinematic.positionOffset = this.cinematic.isTouchDevice
+            ? new THREE.Vector3(3.2, 2.7, 3.5)
+            : new THREE.Vector3(4.65, 4, 4.85)
         
         this.cinematic.target = new THREE.Vector3()
-        this.cinematic.targetOffset = new THREE.Vector3(-3.0, 1.60, -4.60)
+        this.cinematic.targetOffset = this.cinematic.isTouchDevice
+            ? new THREE.Vector3(-2.5, 1.35, -3.8)
+            : new THREE.Vector3(-3.0, 1.60, -4.60)
 
         const applyPositionAndTarget = () =>
         {
@@ -1439,7 +1444,23 @@ export class ProjectsArea extends Area
         this.game.inputs.filters.add('cinematic')
 
         // View cinematic
-        this.game.view.cinematic.start(this.cinematic.position, this.cinematic.target)
+        const isTouchDevice = this.cinematic.isTouchDevice || this.game.inputs.mode === Inputs.MODE_TOUCH
+        this.game.view.cinematic.start(
+            this.cinematic.position,
+            this.cinematic.target,
+            isTouchDevice ? 2 : undefined
+        )
+
+        // On mobile, hand control becomes available after the entrance shot.
+        // Desktop keeps the original fixed cinematic view.
+        if(isTouchDevice)
+        {
+            this.mobileCameraTransition = gsap.delayedCall(1.6, () =>
+            {
+                if(this.state === ProjectsArea.STATE_OPENING || this.state === ProjectsArea.STATE_OPEN)
+                    this.game.view.setMode(View.MODE_FREE)
+            })
+        }
 
         // Interactive point
         this.game.interactivePoints.temporaryHide()
@@ -1491,6 +1512,15 @@ export class ProjectsArea extends Area
 
         if(this.stateTransition)
             this.stateTransition.kill()
+
+        if(this.mobileCameraTransition)
+        {
+            this.mobileCameraTransition.kill()
+            this.mobileCameraTransition = null
+        }
+
+        if(this.game.view.mode === View.MODE_FREE)
+            this.game.view.setMode(View.MODE_DEFAULT)
 
         this.stateTransition = gsap.delayedCall(1.5, () =>
         {
