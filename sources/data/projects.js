@@ -8,10 +8,10 @@ export default [
         images: [ 'otromundo-suculentas.png' ]
     },
     {
-        title: 'ContraLaMaquina',
-        titleSmall: [ 'ContraLa', 'Maquina' ],
+        title: 'Contra la Máquina',
+        titleSmall: [ 'Contra la', 'Máquina' ],
         url: 'https://github.com/aleotromundo/SitioPanacea-3D',
-        attributes: { role: 'reparación de computadoras', with: 'ContraLaMaquina' },
+        attributes: { role: 'reparación de computadoras', with: 'Contra la Máquina' },
         distinctions: [],
         images: [ 'contralamaquina-reparacion.png' ]
     },
