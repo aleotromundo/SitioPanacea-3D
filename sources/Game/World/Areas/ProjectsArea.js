@@ -553,6 +553,7 @@ export class ProjectsArea extends Area
         this.projectObjects = []
         const anchor = this.images.mesh.parent || this.game.scene
         const makeMaterial = (hex) => new MeshDefaultMaterial({ colorNode: color(hex), hasWater: false })
+        const displayTable = anchor.getObjectByName('mainTablePhysicalDynamic')
 
         const succulent = new THREE.Group()
         succulent.add(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.32, 0.55, 12), makeMaterial('#d7a46d')))
@@ -597,15 +598,28 @@ export class ProjectsArea extends Area
 
         this.projectObjects.push(succulent, computer, digital)
         this.projectObjectIntersects = []
-        for(const object of this.projectObjects)
+        for(const [index, object] of this.projectObjects.entries())
         {
-            object.position.copy(this.images.mesh.position)
-            // Keep the decorative object in its own visual lane instead of placing
-            // it in front of the attributes board and project image.
-            object.position.x += 4.8
-            object.position.y += 0.1
-            object.position.z -= 0.9
-            object.rotation.copy(this.images.mesh.rotation)
+            if(index === 0 && displayTable)
+            {
+                // The succulent sits on the front table. These offsets are local
+                // to the projects node and leave a small margin from the edge.
+                object.position.copy(displayTable.position)
+                object.position.x += 0.2
+                object.position.y += 0.85
+                object.position.z += 0.05
+                object.rotation.set(0, displayTable.rotation.y, 0)
+            }
+            else
+            {
+                object.position.copy(this.images.mesh.position)
+                // Keep the other decorative objects in their own visual lane
+                // instead of placing them in front of the attributes board.
+                object.position.x += 4.8
+                object.position.y += 0.1
+                object.position.z -= 0.9
+                object.rotation.copy(this.images.mesh.rotation)
+            }
             object.scale.setScalar(0.58)
             object.visible = false
             anchor.add(object)
@@ -780,9 +794,12 @@ export class ProjectsArea extends Area
         this.attributes.group = this.references.items.get('attributes')[0]
         this.attributes.inter = 0.75
         this.attributes.names = ['role', 'at', 'with']
+        this.attributes.labels = { role: 'ROL', at: 'EN', with: 'CON' }
         this.attributes.items = {}
         this.attributes.status = 'hidden'
         this.attributes.originalY = this.attributes.group.position.y
+        // Bring the attributes column slightly closer to the scene/camera.
+        this.attributes.group.position.z += 0.5
 
         for(const child of this.attributes.group.children)
         {
@@ -804,6 +821,26 @@ export class ProjectsArea extends Area
             )
 
             this.texts.createMaterialOnMesh(textMesh, item.textCanvas.texture)
+
+            // These short English headers are baked into the GLB label planes.
+            // Replacing only those planes lets us translate them without
+            // re-exporting the Blender scene.
+            const labelMesh = item.group.children.find(_child => _child.name.startsWith('refel'))
+            if(labelMesh)
+            {
+                item.labelTextCanvas = new TextCanvas(
+                    this.texts.fontFamily,
+                    this.texts.fontWeight,
+                    this.texts.fontSizeMultiplier * 0.2,
+                    0.85,
+                    0.28,
+                    this.texts.density,
+                    'center',
+                    0.2
+                )
+                item.labelTextCanvas.updateText(this.attributes.labels[child.name] || child.name)
+                this.texts.createMaterialOnMesh(labelMesh, item.labelTextCanvas.texture)
+            }
 
             this.attributes.items[child.name] = item
         }
