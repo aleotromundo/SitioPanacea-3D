@@ -3,7 +3,7 @@ export default [
         title: 'OtroMundo Suculentas',
         titleSmall: [ 'OtroMundo', 'Suculentas' ],
         url: 'https://github.com/aleotromundo/SitioPanacea-3D',
-        attributes: { role: 'suculentas y productos botánicos', with: 'OtroMundo' },
+        attributes: { role: 'venta de suculentas', with: 'OtroMundo' },
         distinctions: [],
         images: [ 'otromundo-suculentas.png' ]
     },

@@ -92,8 +92,10 @@ export class TextCanvas
         // pixels instead of letting Canvas2D silently crop long labels.
         const padding = Math.max(8, this.width * 0.04)
         const maxWidth = this.width - padding * 2
-        const maxLines = Math.max(1, Math.floor(this.height / this.lineHeight))
         let fontSize = this.fontSize
+        // El alto de línea baja junto con la fuente: al achicar el texto entran más líneas.
+        const getMaxLines = () => Math.max(1, Math.floor(this.height / (this.lineHeight * fontSize / this.fontSize)))
+        let maxLines = getMaxLines()
         let lines = this.lines.slice()
 
         const wrapLines = () =>
@@ -130,14 +132,17 @@ export class TextCanvas
         {
             this.context.font = `${this.fontWeight} ${fontSize}px "${this.fontFamily}"`
             lines = wrapLines()
+            maxLines = getMaxLines()
             if(lines.length <= maxLines && lines.every(line => this.context.measureText(line).width <= maxWidth))
                 break
             fontSize *= 0.9
         }
-        while(fontSize > this.fontSize * 0.45)
+        while(fontSize > this.fontSize * 0.2)
 
         this.context.font = `${this.fontWeight} ${fontSize}px "${this.fontFamily}"`
         lines = wrapLines()
+        maxLines = getMaxLines()
+        const lineHeight = this.lineHeight * fontSize / this.fontSize
 
         // Unbreakable strings (URLs/IDs) get an ellipsis rather than a hard crop.
         if(lines.length > maxLines)
@@ -160,7 +165,7 @@ export class TextCanvas
         for(const line of lines)
         {
             // const y = this.height / (this.lines.length + 1) * (i + 1)
-            const y = this.height / 2 + (i - (lines.length - 1) / 2) * this.lineHeight
+            const y = this.height / 2 + (i - (lines.length - 1) / 2) * lineHeight
 
             let x = null
             if(this.horizontalAlign === 'center')

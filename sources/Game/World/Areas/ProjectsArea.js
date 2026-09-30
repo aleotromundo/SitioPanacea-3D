@@ -296,6 +296,47 @@ export class ProjectsArea extends Area
         }
     }
 
+    createLabelOnMesh(mesh, text)
+    {
+        // Normaliza los UVs de los planos del atlas para mostrar el canvas completo.
+        mesh.geometry = mesh.geometry.clone()
+        const uv = mesh.geometry.attributes.uv
+        let uMin = Infinity, uMax = - Infinity, vMin = Infinity, vMax = - Infinity
+        for(let i = 0; i < uv.count; i++)
+        {
+            uMin = Math.min(uMin, uv.getX(i)); uMax = Math.max(uMax, uv.getX(i))
+            vMin = Math.min(vMin, uv.getY(i)); vMax = Math.max(vMax, uv.getY(i))
+        }
+        for(let i = 0; i < uv.count; i++)
+            uv.setXY(i, (uv.getX(i) - uMin) / (uMax - uMin), (uv.getY(i) - vMin) / (vMax - vMin))
+        uv.needsUpdate = true
+
+        const position = mesh.geometry.attributes.position
+        const corner = (i) => new THREE.Vector3().fromBufferAttribute(position, i)
+        const edges = [
+            corner(0).distanceTo(corner(1)),
+            corner(0).distanceTo(corner(2)),
+            corner(0).distanceTo(corner(3))
+        ].sort((a, b) => a - b)
+        const height = edges[0] * 4
+        const width = edges[1] * 4
+
+        const textCanvas = new TextCanvas(
+            this.texts.fontFamily,
+            this.texts.fontWeight,
+            this.texts.fontSizeMultiplier * height * 0.62,
+            width,
+            height,
+            this.texts.density,
+            'center',
+            height * 0.9
+        )
+        textCanvas.updateText(text)
+        this.texts.createMaterialOnMesh(mesh, textCanvas.texture)
+
+        return textCanvas
+    }
+
     setHover()
     {
         this.hover = {}
@@ -802,12 +843,25 @@ export class ProjectsArea extends Area
         this.attributes.labels = { role: 'ROL', at: 'EN', with: 'CON' }
         this.attributes.items = {}
         this.attributes.status = 'hidden'
-        this.attributes.originalY = this.attributes.group.position.y
-        // Acerca el poste de atributos a la cámara. Ajustá estos dos valores:
-        // z: más alto = más cerca de la cámara | x: más alto = más a la derecha
-        this.attributes.offset = { x: 0.6, z: 1.6 }
-        this.attributes.group.position.x += this.attributes.offset.x
-        this.attributes.group.position.z += this.attributes.offset.z
+        this.attributes.count = 1
+        this.attributes.offset = { x: 0.6, y: 0.35, z: 1.6 }
+        this.attributes.base = this.attributes.group.position.clone()
+        this.attributes.applyOffset = () =>
+        {
+            this.attributes.originalY = this.attributes.base.y + this.attributes.offset.y
+            this.attributes.group.position.x = this.attributes.base.x + this.attributes.offset.x
+            this.attributes.group.position.z = this.attributes.base.z + this.attributes.offset.z
+            this.attributes.group.position.y = this.attributes.originalY + (this.attributes.count - 1) * 0.75 / 2
+        }
+        this.attributes.applyOffset()
+
+        if(this.game.debug.active)
+        {
+            const debugPanel = this.debugPanel.addFolder({ title: 'attributes', expanded: false })
+            debugPanel.addBinding(this.attributes.offset, 'x', { min: - 3, max: 3, step: 0.05 }).on('change', this.attributes.applyOffset)
+            debugPanel.addBinding(this.attributes.offset, 'y', { min: - 3, max: 3, step: 0.05 }).on('change', this.attributes.applyOffset)
+            debugPanel.addBinding(this.attributes.offset, 'z', { min: - 3, max: 3, step: 0.05 }).on('change', this.attributes.applyOffset)
+        }
 
         for(const child of this.attributes.group.children)
         {
@@ -820,7 +874,7 @@ export class ProjectsArea extends Area
             item.textCanvas = new TextCanvas(
                 this.texts.fontFamily,
                 this.texts.fontWeight,
-                this.texts.fontSizeMultiplier * 0.23,
+                this.texts.fontSizeMultiplier * (child.name === 'role' ? 0.38 : 0.23),
                 1.4,
                 0.45,
                 this.texts.density,
@@ -835,20 +889,7 @@ export class ProjectsArea extends Area
             // re-exporting the Blender scene.
             const labelMesh = item.group.children.find(_child => _child.name.startsWith('refel'))
             if(labelMesh)
-            {
-                item.labelTextCanvas = new TextCanvas(
-                    this.texts.fontFamily,
-                    this.texts.fontWeight,
-                    this.texts.fontSizeMultiplier * 0.2,
-                    0.85,
-                    0.28,
-                    this.texts.density,
-                    'center',
-                    0.2
-                )
-                item.labelTextCanvas.updateText(this.attributes.labels[child.name] || child.name)
-                this.texts.createMaterialOnMesh(labelMesh, item.labelTextCanvas.texture)
-            }
+                item.labelTextCanvas = this.createLabelOnMesh(labelMesh, this.attributes.labels[child.name] || child.name)
 
             this.attributes.items[child.name] = item
         }
@@ -891,6 +932,7 @@ export class ProjectsArea extends Area
                     }
                 }
 
+                this.attributes.count = i
                 this.attributes.group.position.y = this.attributes.originalY + (i - 1) * 0.75 / 2
             })
         }
@@ -1180,25 +1222,11 @@ export class ProjectsArea extends Area
         this.distinctions.items.fwa = this.distinctions.group.children.find(_child => _child.name.startsWith('fwa'))
         this.distinctions.items.cssda = this.distinctions.group.children.find(_child => _child.name.startsWith('cssda'))
 
-        // El texto "DISTINCTIONS" viene horneado en la textura del GLB.
-        // Se reemplaza el plano de texto por uno dibujado con TextCanvas.
+        // El GLB incluye un plano de texto que se reemplaza por el rótulo traducido.
         const distinctionsAnchor = this.images.mesh.parent || this.game.scene
         const distinctionsLabelMesh = distinctionsAnchor.children.find(_child => _child.name.startsWith('refel'))
         if(distinctionsLabelMesh)
-        {
-            this.distinctions.labelTextCanvas = new TextCanvas(
-                this.texts.fontFamily,
-                this.texts.fontWeight,
-                this.texts.fontSizeMultiplier * 0.23,
-                1.4,
-                0.45,
-                this.texts.density,
-                'center',
-                0.2
-            )
-            this.distinctions.labelTextCanvas.updateText('DISTINCIONES')
-            this.texts.createMaterialOnMesh(distinctionsLabelMesh, this.distinctions.labelTextCanvas.texture)
-        }
+            this.distinctions.labelTextCanvas = this.createLabelOnMesh(distinctionsLabelMesh, 'PREMIOS')
 
         this.distinctions.positions = [
             [
