@@ -54,15 +54,13 @@ export class InputFlag
         if(countryCode === '')
         {
             const locale = Intl.DateTimeFormat().resolvedOptions().locale
-            
-                        <span class="label">${name} (${code})</span>
+
+            if(locale)
             {
                 const localeSplit = locale.split('-')
 
                 if(localeSplit.length)
-                    country.terms = `${_country[0]} ${_country[1]} ${name} ${code}`
                     countryCode = localeSplit[localeSplit.length - 1].toLowerCase()
-                }
             }
         }
 
