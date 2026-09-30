@@ -599,13 +599,10 @@ export class ProjectsArea extends Area
         this.projectObjects = []
         const anchor = this.images.mesh.parent || this.game.scene
         const makeMaterial = (hex) => new MeshDefaultMaterial({ colorNode: color(hex), hasWater: false })
-        const displayTable = anchor.getObjectByName('mainTablePhysicalDynamic')
-        for(const name of ['table.002', 'cube.024', 'medal'])
-        {
-            const object = anchor.getObjectByName(name)
-            if(object)
-                object.visible = false
-        }
+        const prizeTable = anchor.getObjectByName('mainTablePhysicalDynamic')
+        const displayTable = anchor.getObjectByName('table.002')
+        if(prizeTable)
+            prizeTable.visible = false
 
         const succulent = new THREE.Group()
         succulent.add(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.32, 0.55, 12), makeMaterial('#d7a46d')))
@@ -657,7 +654,7 @@ export class ProjectsArea extends Area
                 // Each project object uses the same clear spot on the remaining table.
                 object.position.copy(displayTable.position)
                 object.position.x += 0.2
-                object.position.y += 0.85
+                object.position.y += index === 0 ? 0.65 : 0.85
                 object.position.z += 0.05
                 object.rotation.set(0, displayTable.rotation.y, 0)
             }
