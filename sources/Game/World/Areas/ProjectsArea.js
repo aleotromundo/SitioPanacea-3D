@@ -874,7 +874,7 @@ export class ProjectsArea extends Area
             item.textCanvas = new TextCanvas(
                 this.texts.fontFamily,
                 this.texts.fontWeight,
-                this.texts.fontSizeMultiplier * (child.name === 'role' ? 0.32 : 0.23),
+                this.texts.fontSizeMultiplier * (child.name === 'role' ? 0.29 : 0.23),
                 1.4,
                 0.45,
                 this.texts.density,
