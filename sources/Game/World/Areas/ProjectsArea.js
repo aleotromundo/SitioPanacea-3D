@@ -181,7 +181,7 @@ export class ProjectsArea extends Area
         this.cinematic.isTouchDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || navigator.maxTouchPoints > 0
         this.cinematic.position = new THREE.Vector3()
         this.cinematic.positionOffset = this.cinematic.isTouchDevice
-            ? new THREE.Vector3(3.2, 2.7, 3.5)
+            ? new THREE.Vector3(3.8, 2.85, 4.25)
             : new THREE.Vector3(4.65, 4, 4.85)
         
         this.cinematic.target = new THREE.Vector3()
