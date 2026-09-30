@@ -25,7 +25,7 @@ export default
     ],
     [
         'lab',
-        'I\'m a bit of a scientist myself',
+        'Algo de científico tengo',
         'Revisá cada proyecto del <strong>laboratorio</strong>.',
         labData.length,
         true // Unique
@@ -33,30 +33,30 @@ export default
     [
         'cookie',
         'Despertar y arrancar',
-        'Accept <strong>1</strong> cookies.',
+        'Aceptá <strong>1</strong> galleta.',
         1
     ],
     [
         'cookie',
         'Haciendo masa',
-        'Accept <strong>10</strong> cookies.',
+        'Aceptá <strong>10</strong> galletas.',
         10
     ],
     [
         'cookie',
         'Muy horneado',
-        'Accept <strong>100</strong> cookies.',
+        'Aceptá <strong>100</strong> galletas.',
         100
     ],
     [
         'cookie',
         'Clickeador de galletas',
-        'Accept <strong>1000</strong> cookies.',
+        'Aceptá <strong>1000</strong> galletas.',
         1000
     ],
     [
         'whisper',
-        'It\'s About Sending A Message',
+        'Se trata de mandar un mensaje',
         'Publicá un mensaje.',
         1
     ],
@@ -92,7 +92,7 @@ export default
     ],
     [
         'honk',
-        'Honk',
+        '¡Bocinazo!',
         'Tocá la bocina como un piloto francés.',
         10
     ],
@@ -111,14 +111,14 @@ export default
     ],
     [
         'strike',
-        'F*** it, dude. Let\'s go bowling',
-        'Accomplished a strike.',
+        '¡Al carajo, amigo! Vamos a jugar al bowling',
+        'Hacé un strike.',
         1
     ],
     [
         'toiletDown',
-        'Do not disturb',
-        'Knock down the latrine.',
+        'No molestar',
+        'Derribá la letrina.',
         1
     ],
     [
@@ -130,7 +130,7 @@ export default
     [
         'circuitFinishFast',
         'KA-CHOW!',
-        'Finish a race in less than <strong>30s</strong>.',
+        'Terminá una carrera en menos de <strong>30 s</strong>.',
         1
     ],
     [
@@ -225,7 +225,7 @@ export default
     ],
     [
         'debug',
-        'It\'s not a bug, it\'s a feature',
+        'No es un error, es una función',
         'Accedé a la interfaz de depuración.',
         1
     ],

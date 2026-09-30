@@ -55,12 +55,12 @@ export class InputFlag
         {
             const locale = Intl.DateTimeFormat().resolvedOptions().locale
             
-            if(locale)
+                        <span class="label">${name} (${code})</span>
             {
                 const localeSplit = locale.split('-')
 
                 if(localeSplit.length)
-                {
+                    country.terms = `${_country[0]} ${_country[1]} ${name} ${code}`
                     countryCode = localeSplit[localeSplit.length - 1].toLowerCase()
                 }
             }
@@ -80,21 +80,26 @@ export class InputFlag
 
     setCountries()
     {
+        const regionNames = new Intl.DisplayNames(['es'], { type: 'region' })
+
         for(const _country of countriesData)
         {
+            const countryCode = _country[2]
+            const regionName = /^[a-z]{2}$/i.test(countryCode) ? regionNames.of(countryCode.toUpperCase()) : null
+            const name = regionName && regionName.toUpperCase() !== countryCode.toUpperCase() ? regionName : _country[0]
             const imageUrl = `ui/flags/${_country[2]}.webp`
             const element = document.createElement('div')
             element.classList.add('choice')
             element.innerHTML = /* html */`
                 <img class="js-flag flag" src="${imageUrl}" loading="lazy">
-                <span class="label">${_country[0]} (${_country[2]})</span>
+                <span class="label">${name} (${countryCode})</span>
             `
 
             const country = {}
             country.element = element
-            country.terms = `${_country[0]} ${_country[1]} ${_country[2]}`
+            country.terms = `${_country[0]} ${_country[1]} ${name} ${countryCode}`
             country.imageUrl = imageUrl
-            country.code = _country[2]
+            country.code = countryCode
 
             country.element.addEventListener('click', () =>
             {
