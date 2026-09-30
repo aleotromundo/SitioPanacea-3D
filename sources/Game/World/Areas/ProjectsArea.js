@@ -296,7 +296,7 @@ export class ProjectsArea extends Area
         }
     }
 
-    createLabelOnMesh(mesh, text)
+    createLabelOnMesh(mesh, text, fontSizeMultiplier = 0.62)
     {
         // Normaliza los UVs de los planos del atlas para mostrar el canvas completo.
         mesh.geometry = mesh.geometry.clone()
@@ -324,7 +324,7 @@ export class ProjectsArea extends Area
         const textCanvas = new TextCanvas(
             this.texts.fontFamily,
             this.texts.fontWeight,
-            this.texts.fontSizeMultiplier * height * 0.62,
+            this.texts.fontSizeMultiplier * height * fontSizeMultiplier,
             width,
             height,
             this.texts.density,
@@ -874,7 +874,7 @@ export class ProjectsArea extends Area
             item.textCanvas = new TextCanvas(
                 this.texts.fontFamily,
                 this.texts.fontWeight,
-                this.texts.fontSizeMultiplier * (child.name === 'role' ? 0.38 : 0.23),
+                this.texts.fontSizeMultiplier * (child.name === 'role' ? 0.32 : 0.23),
                 1.4,
                 0.45,
                 this.texts.density,
@@ -889,7 +889,11 @@ export class ProjectsArea extends Area
             // re-exporting the Blender scene.
             const labelMesh = item.group.children.find(_child => _child.name.startsWith('refel'))
             if(labelMesh)
-                item.labelTextCanvas = this.createLabelOnMesh(labelMesh, this.attributes.labels[child.name] || child.name)
+                item.labelTextCanvas = this.createLabelOnMesh(
+                    labelMesh,
+                    this.attributes.labels[child.name] || child.name,
+                    child.name === 'at' ? 0.62 : 0.82
+                )
 
             this.attributes.items[child.name] = item
         }
