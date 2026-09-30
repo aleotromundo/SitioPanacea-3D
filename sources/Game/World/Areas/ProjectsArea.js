@@ -843,25 +843,7 @@ export class ProjectsArea extends Area
         this.attributes.labels = { role: 'ROL', at: 'EN', with: 'CON' }
         this.attributes.items = {}
         this.attributes.status = 'hidden'
-        this.attributes.count = 1
-        this.attributes.offset = { x: 0.6, y: 0.35, z: 1.6 }
-        this.attributes.base = this.attributes.group.position.clone()
-        this.attributes.applyOffset = () =>
-        {
-            this.attributes.originalY = this.attributes.base.y + this.attributes.offset.y
-            this.attributes.group.position.x = this.attributes.base.x + this.attributes.offset.x
-            this.attributes.group.position.z = this.attributes.base.z + this.attributes.offset.z
-            this.attributes.group.position.y = this.attributes.originalY + (this.attributes.count - 1) * 0.75 / 2
-        }
-        this.attributes.applyOffset()
-
-        if(this.game.debug.active)
-        {
-            const debugPanel = this.debugPanel.addFolder({ title: 'attributes', expanded: false })
-            debugPanel.addBinding(this.attributes.offset, 'x', { min: - 3, max: 3, step: 0.05 }).on('change', this.attributes.applyOffset)
-            debugPanel.addBinding(this.attributes.offset, 'y', { min: - 3, max: 3, step: 0.05 }).on('change', this.attributes.applyOffset)
-            debugPanel.addBinding(this.attributes.offset, 'z', { min: - 3, max: 3, step: 0.05 }).on('change', this.attributes.applyOffset)
-        }
+        this.attributes.originalY = this.attributes.group.position.y
 
         for(const child of this.attributes.group.children)
         {
@@ -936,7 +918,6 @@ export class ProjectsArea extends Area
                     }
                 }
 
-                this.attributes.count = i
                 this.attributes.group.position.y = this.attributes.originalY + (i - 1) * 0.75 / 2
             })
         }
