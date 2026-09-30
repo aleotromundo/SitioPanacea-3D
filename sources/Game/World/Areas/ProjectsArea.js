@@ -1230,7 +1230,7 @@ export class ProjectsArea extends Area
         const distinctionsAnchor = this.images.mesh.parent || this.game.scene
         const distinctionsLabelMesh = distinctionsAnchor.children.find(_child => _child.name.startsWith('refel'))
         if(distinctionsLabelMesh)
-            this.distinctions.labelTextCanvas = this.createLabelOnMesh(distinctionsLabelMesh, 'PREMIOS')
+            this.distinctions.labelTextCanvas = this.createLabelOnMesh(distinctionsLabelMesh, 'PREMIOS', 0.72)
 
         this.distinctions.positions = [
             [
