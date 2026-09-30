@@ -284,7 +284,8 @@ export class View
     setZoom()
     {
         this.zoom = {}
-        this.zoom.baseRatio = 0.6
+        const isTouchDevice = navigator.maxTouchPoints > 0 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+        this.zoom.baseRatio = isTouchDevice ? 0.48 : 0.6
         this.zoom.ratio = this.zoom.baseRatio
         this.zoom.smoothedRatio = this.zoom.baseRatio
         this.zoom.speedAmplitude = - 0.4
