@@ -600,6 +600,12 @@ export class ProjectsArea extends Area
         const anchor = this.images.mesh.parent || this.game.scene
         const makeMaterial = (hex) => new MeshDefaultMaterial({ colorNode: color(hex), hasWater: false })
         const displayTable = anchor.getObjectByName('mainTablePhysicalDynamic')
+        for(const name of ['table.002', 'cube.024', 'medal'])
+        {
+            const object = anchor.getObjectByName(name)
+            if(object)
+                object.visible = false
+        }
 
         const succulent = new THREE.Group()
         succulent.add(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.32, 0.55, 12), makeMaterial('#d7a46d')))
@@ -644,12 +650,11 @@ export class ProjectsArea extends Area
 
         this.projectObjects.push(succulent, computer, digital)
         this.projectObjectIntersects = []
-        for(const [index, object] of this.projectObjects.entries())
+        for(const object of this.projectObjects)
         {
-            if(index === 0 && displayTable)
+            if(displayTable)
             {
-                // The succulent sits on the front table. These offsets are local
-                // to the projects node and leave a small margin from the edge.
+                // Each project object uses the same clear spot on the remaining table.
                 object.position.copy(displayTable.position)
                 object.position.x += 0.2
                 object.position.y += 0.85
