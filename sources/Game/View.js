@@ -109,7 +109,10 @@ export class View
         this.focusPoint.smoothedPosition.copy(this.focusPoint.position)
 
         this.freeMode.enabled = this.mode === View.MODE_FREE
-        this.freeMode.setTarget(this.focusPoint.position.x, this.focusPoint.position.y, this.focusPoint.position.z)
+        const target = this.mode === View.MODE_FREE && this.cinematic.active
+            ? this.cinematic.target
+            : this.focusPoint.position
+        this.freeMode.setTarget(target.x, target.y, target.z)
         this.freeMode.setPosition(this.camera.position.x, this.camera.position.y, this.camera.position.z)
     }
 
