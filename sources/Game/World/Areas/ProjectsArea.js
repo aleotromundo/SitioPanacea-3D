@@ -1503,7 +1503,7 @@ export class ProjectsArea extends Area
         this.game.view.cinematic.start(
             this.cinematic.position,
             this.cinematic.target,
-            isTouchDevice ? 2 : undefined
+            isTouchDevice ? 4 : undefined
         )
 
         // On mobile, hand control becomes available after the entrance shot.
