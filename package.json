@@ -27,8 +27,11 @@
         "glob": "^13.0.0",
         "gsap": "^3.12.5",
         "howler": "^2.2.4",
+        "lucide-react": "^1.49.0",
         "msgpack-lite": "^0.1.26",
         "normalize-wheel": "^1.0.1",
+        "react": "^19.3.0",
+        "react-dom": "^19.3.0",
         "seedrandom": "^3.0.5",
         "sharp": "^0.34.5",
         "stats-gl": "^3.6.0",
@@ -41,5 +44,10 @@
         "vite-plugin-restart": "^0.4.1",
         "vite-plugin-top-level-await": "^1.6.0",
         "vite-plugin-wasm": "^3.5.0"
+    },
+    "devDependencies": {
+        "@types/node": "^26.6.3",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "^19.3.0"
     }
 }
